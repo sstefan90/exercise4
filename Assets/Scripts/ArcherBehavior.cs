@@ -42,6 +42,11 @@ public class ArcherBehavior : MonoBehaviour
     // Hint: which of the state variables at the top of this file might you need for this function?
     private bool isInRange() {
         // TODO: Implement this method
+        if (calculateDistanceToPlayer() <= range){
+            print("player in range!");
+            return true;
+        }
+        print("player out of range");
         return false;
     }
 
@@ -51,7 +56,11 @@ public class ArcherBehavior : MonoBehaviour
     // Hint: Use `Time.time` to get the current in-game time
     // Hint: You'll know the cooldown is over when the time since the last shot is greater than the cooldown
     private bool cooldownOver() {
-        // TODO: Implement this method
+        
+        if (Time.time - lastShotTime >= cooldown){
+            print("Cooldown is over");
+            return true;
+        }
         return false;
     }
 
@@ -74,7 +83,17 @@ public class ArcherBehavior : MonoBehaviour
     // https://docs.unity3d.com/6000.3/Documentation/Manual/Coroutines.html
     void Update()
     {
-        // TODO: Implement this method
+        
+        facePlayer();
+
+        if (isInRange() && cooldownOver()){
+            if (animator != null) {
+                animator.SetBool("IsShooting", true);
+            }
+
+            lastShotTime = Time.time;
+            StartCoroutine(ShootArrow());
+        }
     }
 
 
